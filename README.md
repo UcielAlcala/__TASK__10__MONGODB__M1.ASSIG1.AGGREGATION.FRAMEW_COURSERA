@@ -10,7 +10,7 @@ The functional goal of the assignment is to:
 
 Note that this assignment was written so that you can implement it in parts
 after each lecture. If you are performing the assignment in between lectures,
-stop at the next lecture boundary in the technical requirements section and 
+stop at the next lecture boundary in the technical requirements section and
 resume once you have completed the lecture. You are free to experiment with
 other forms of the queries presented, but the grading will only be targeted
 at the specific requirements listed.
@@ -45,8 +45,8 @@ of your solution.
     $ gem install mongo -v 2.1.2
     ```
 
-5. Run the rspec command from the project root directory (i.e., `student-start` directory) 
-to execute the unit tests within the spec directory. This should result in several failures 
+5. Run the rspec command from the project root directory (i.e., `student-start` directory)
+to execute the unit tests within the spec directory. This should result in several failures
 until you complete your solution in `assignment.rb`.
 
     ```shell
@@ -76,7 +76,7 @@ and assign that collection to the variable called `racers` (used in follow-on st
 
     ```ruby
     $ irb
-    > require './assignment.rb`
+    > require './assignment.rb'
     > racers=Solution.collection
      => #<Mongo::Collection:0x22344800 namespace=test.race1>
     ```
@@ -91,9 +91,9 @@ and assign that collection to the variable called `racers` (used in follow-on st
     To break this query down
 
     ```ruby
-    > racers.find.aggregate([ 
-          {:$group=>{ 
-              :_id=>0, 
+    > racers.find.aggregate([
+          {:$group=>{
+              :_id=>0,
               :count=>{:$sum=>1}}
           }
       ]).first
@@ -104,23 +104,23 @@ and assign that collection to the variable called `racers` (used in follow-on st
       aggregate commands in that array and `$group` can occur multiple times. The order within
       the array is important.
       * `$group` has two primary arguments: group by key, and group functions. The function
-      results are associated with each resulting key. In this example, we are making the 
-      key be a single value -- so all functions results are applied against every row. 
+      results are associated with each resulting key. In this example, we are making the
+      key be a single value -- so all functions results are applied against every row.
       We have a single group.
-      * `_id` is assigned to our group key. Here it is a fixed `0` value to make every 
+      * `_id` is assigned to our group key. Here it is a fixed `0` value to make every
       document processed a member of the same group.
-      * `count` is a property name we want in the results. We set it to the result of 
+      * `count` is a property name we want in the results. We set it to the result of
       counting 1 for each document.
       * `$sum` is an aggregate function that adds a number (`1` in this case) for each
       document it processes.
       * `first()` is a function that returns only the first document from the result of
       `aggregate()`. Since we know we will have only a single result row with the count result,
-      we can simply return the first (and only) result. 
+      we can simply return the first (and only) result.
 
 
 3. Issue a slightly more complex aggregation query that counts the number of race results
 by group. Please pardon the overload of the age-group `'$group'` (e.g., "14 and under")
-with the MongoDB aggregation function `:$group`. 
+with the MongoDB aggregation function `:$group`.
 
     ```ruby
     > racers.find.aggregate([ {:$group=>{:_id=>"$group", :count=>{:$sum=>1}}}]).each {|r| pp r}
@@ -140,17 +140,17 @@ with the MongoDB aggregation function `:$group`.
     changed the `$group` specification to use the name of the (age-)`group` as the key.
     As you saw above -- this results in several documents broken down by distinct (age-)`group`
     name assigned to the `_id` of the document.
-    * `count` and `$sum` work the same as they did before except they have more (aggregate function-)`group`s 
+    * `count` and `$sum` work the same as they did before except they have more (aggregate function-)`group`s
     to work with.
     * `each` iterates through each document in the collection. Since we may have multiple documents
     `first` is of little value to us except to grab a sample.
-    * `{|r| pp r}` is a single line block where each document of the result is passed in as `r` and 
+    * `{|r| pp r}` is a single line block where each document of the result is passed in as `r` and
     pretty print (`pp`) is used to print a more human readable form of document hashes.
 
     ```ruby
     > racers.find.aggregate([ {
           :$group=>{
-              :_id=>"$group", 
+              :_id=>"$group",
               :count=>{:$sum=>1}}
               }
               ]).each {|r| pp r}
@@ -184,8 +184,8 @@ required by downstream aggregation functions and in the final result. You will p
     ```ruby
     > s=Solution.new
     > r=s.racer_names.to_a.slice(0,2)
-      => [{"first_name"=>"SHAUN", "last_name"=>"JOHNSON"}, 
-          {"first_name"=>"TUAN", "last_name"=>"JOHNSON"}] 
+      => [{"first_name"=>"SHAUN", "last_name"=>"JOHNSON"},
+          {"first_name"=>"TUAN", "last_name"=>"JOHNSON"}]
     ```
 
     ```shell
@@ -202,8 +202,8 @@ required by downstream aggregation functions and in the final result. You will p
 
     ```ruby
     > r=s.id_number_map.to_a.slice(0,2)
-    [{"_id"=>BSON::ObjectId('563e7555e301d0b356000000'), "number"=>0}, 
-     {"_id"=>BSON::ObjectId('563e7555e301d0b356000001'), "number"=>1}] 
+    [{"_id"=>BSON::ObjectId('563e7555e301d0b356000000'), "number"=>0},
+     {"_id"=>BSON::ObjectId('563e7555e301d0b356000001'), "number"=>1}]
     ```
 
     ```shell
@@ -222,7 +222,7 @@ required by downstream aggregation functions and in the final result. You will p
 
     ```ruby
     > r=s.concat_names.to_a.slice(0,2)
-     => [{"number"=>0, "name"=>"JOHNSON, SHAUN"}, {"number"=>1, "name"=>"JOHNSON, TUAN"}] 
+     => [{"number"=>0, "name"=>"JOHNSON, SHAUN"}, {"number"=>1, "name"=>"JOHNSON, TUAN"}]
     ```
 
     ```shell
@@ -246,7 +246,7 @@ In this section we will get some practice applying group functions around a sele
 
     ```ruby
     > r=s.group_times.to_a.slice(0,3)
-     => [{"_id"=>{"age"=>"50 to 59", "gender"=>"F"}, "runners"=>65, "fastest_time"=>1269}, 
+     => [{"_id"=>{"age"=>"50 to 59", "gender"=>"F"}, "runners"=>65, "fastest_time"=>1269},
          {"_id"=>{"age"=>"30 to 39", "gender"=>"M"}, "runners"=>68, "fastest_time"=>1262},
          {"_id"=>{"age"=>"14 and under", "gender"=>"M"}, "runners"=>66, "fastest_time"=>1363}]
     ```
@@ -263,14 +263,14 @@ In this section we will get some practice applying group functions around a sele
     (Hint: [$push](https://docs.mongodb.org/v3.0/reference/operator/aggregation/push/#grp._S_push))
     * returns the Mongo result object for the aggregation command
 
-    You can try out your new method using the irb shell. Note the first group and the names within 
+    You can try out your new method using the irb shell. Note the first group and the names within
     the group may not be in the same order as the example shows.
 
     ```ruby
     > r=s.group_last_names.first
-    {"_id"=>{"age"=>"50 to 59", "gender"=>"F"}, "last_names"=>["GARNER", "SINGH", ...]} 
+    {"_id"=>{"age"=>"50 to 59", "gender"=>"F"}, "last_names"=>["GARNER", "SINGH", ...]}
     > r=s.group_last_names.first[:last_names].count
-     => 65 
+     => 65
     ```
 
     ```shell
@@ -282,17 +282,17 @@ In this section we will get some practice applying group functions around a sele
     * creates an array[] of (__distinct__) last_names called `last_names`
     (Hint: [$addToSet](https://docs.mongodb.org/v3.0/reference/operator/aggregation/addToSet/#grp._S_addToSet))
 
-    Note that because of the size of the array and the fact the contents are unsorted, it is hard 
+    Note that because of the size of the array and the fact the contents are unsorted, it is hard
     to visually spot the duplicates, but `$addToSet` will de-dup the collection and `$push` will
     collect all members.
 
-    You can try out your new method using the irb shell. 
+    You can try out your new method using the irb shell.
 
     ```ruby
     > r=s.group_last_names_set.first
-    {"_id"=>{"age"=>"50 to 59", "gender"=>"F"}, "last_names"=>["GARNER", "SINGH", ...]} 
+    {"_id"=>{"age"=>"50 to 59", "gender"=>"F"}, "last_names"=>["GARNER", "SINGH", ...]}
     > r=s.group_last_names_set.first[:last_names].count
-     => 61 
+     => 61
     ```
 
     ```shell
@@ -316,14 +316,14 @@ In this section we will limit documents in the query pipeline to those that matc
     Note that this will require that you form a `$match` (`:fastest_time`) on a property that is not in the original
     document from the database.
 
-    You can try out your new method using the irb shell. 
+    You can try out your new method using the irb shell.
 
     ```ruby
     > r=s.groups_faster_than(1280).to_a
-     => [{"_id"=>{"age"=>"50 to 59", "gender"=>"F"}, "runners"=>65, "fastest_time"=>1269}, 
+     => [{"_id"=>{"age"=>"50 to 59", "gender"=>"F"}, "runners"=>65, "fastest_time"=>1269},
          {"_id"=>{"age"=>"30 to 39", "gender"=>"M"}, "runners"=>68, "fastest_time"=>1262},
-         {"_id"=>{"age"=>"30 to 39", "gender"=>"F"}, "runners"=>59, "fastest_time"=>1270}, 
-         {"_id"=>{"age"=>"masters", "gender"=>"F"}, "runners"=>58, "fastest_time"=>1264}] 
+         {"_id"=>{"age"=>"30 to 39", "gender"=>"F"}, "runners"=>59, "fastest_time"=>1270},
+         {"_id"=>{"age"=>"masters", "gender"=>"F"}, "runners"=>58, "fastest_time"=>1264}]
     ```
 
     ```shell
@@ -349,12 +349,12 @@ In this section we will limit documents in the query pipeline to those that matc
     > r=s.age_groups_faster_than "masters",1280
      => {"_id"=>{"age"=>"masters", "gender"=>"F"}, "runners"=>58, "fastest_time"=>1264}
     ```
-    
+
     ```shell
     $rspec spec/lecture4_spec.rb -e rq02
     ```
 
-### Lecture 5: 
+### Lecture 5:
 In this section we will modify the database.
 
 1. Implement an instance method called `avg_family_time` that
@@ -368,7 +368,7 @@ In this section we will modify the database.
 
     ```ruby
     > s.avg_family_time("JONES").first
-     => {"_id"=>"JONES", "avg_time"=>2006.6, "numbers"=>[3, 4, 5, 6, 7]} 
+     => {"_id"=>"JONES", "avg_time"=>2006.6, "numbers"=>[3, 4, 5, 6, 7]}
     ```
 
     ```shell
@@ -382,7 +382,7 @@ In this section we will modify the database.
     * forms an array of numbers for each member of the group (Hint: `$group` and `$push`)
     This is where the difference starts.
     * forms a result with `avg_time` for each number (Hint: `$unwind`)
-    * forms a result with `last_name`, `number`, and `avg_time` for each number in the family 
+    * forms a result with `last_name`, `number`, and `avg_time` for each number in the family
     with no `_id` property (Hint: `$project`)
     * returns the Mongo result object for the command
 
@@ -416,8 +416,8 @@ $ rspec
 
 ## Submission
 
-There is no submission required for this assignment but the 
-skills learned will be part of a follow-on assignment so 
+There is no submission required for this assignment but the
+skills learned will be part of a follow-on assignment so
 please complete this to the requirements of the unit test.
 
 ## Last Updated: 2016-01-31
